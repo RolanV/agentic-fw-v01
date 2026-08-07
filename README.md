@@ -9,7 +9,12 @@ A production‑ready, AI‑first UI automation platform built on **Playwright**,
    ```bash
    npm ci
    ```
-
+   ---
+   if not work
+   ---
+      ```bash
+   npm install --legacy-peer-deps
+   ```
 2. **Set up environment variables**
 
    ```bash
