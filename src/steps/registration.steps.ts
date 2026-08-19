@@ -61,18 +61,24 @@ When(
 /**
  * When: User fills the registration form with a weak password
  */
-When('the user fills the registration form with a weak password {string}', async function (password: string) {
-  const data = { ...VALID_REGISTRATION_DATA, password };
-  await registrationPage.fillRegistrationForm(data);
-});
+When(
+  'the user fills the registration form with a weak password {string}',
+  async function (password: string) {
+    const data = { ...VALID_REGISTRATION_DATA, password };
+    await registrationPage.fillRegistrationForm(data);
+  },
+);
 
 /**
  * When: User fills the registration form with an existing username
  */
-When('the user fills the registration form with an existing username {string}', async function (username: string) {
-  const data = { ...VALID_REGISTRATION_DATA, username };
-  await registrationPage.fillRegistrationForm(data);
-});
+When(
+  'the user fills the registration form with an existing username {string}',
+  async function (username: string) {
+    const data = { ...VALID_REGISTRATION_DATA, username };
+    await registrationPage.fillRegistrationForm(data);
+  },
+);
 
 /**
  * When: User clears a specific field
@@ -137,9 +143,7 @@ Then('a validation error for {string} should be displayed', async function (fiel
   expect(isConfirmed).toBeFalsy();
 
   // Additional check: locate an element containing the field name and an error indicator
-  const errorLocator = page
-    .locator(`[role="alert"]`)
-    .filter({ hasText: new RegExp(field, 'i') });
+  const errorLocator = page.locator(`[role="alert"]`).filter({ hasText: new RegExp(field, 'i') });
   const visible = await errorLocator.isVisible().catch(() => false);
   expect(visible).toBeTruthy();
 });

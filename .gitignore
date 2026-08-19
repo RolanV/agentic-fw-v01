@@ -43,3 +43,13 @@ coverage/
 # .cline/prompts – prompt definitions that guide agents when generating content.
 # .cline/skills – reusable skill libraries (e.g., Playwright, locator generation) that agents invoke to perform concrete actions.
 # Relations: Agents use prompts to decide what to generate, employ skills to implement logic, and output files based on templates. Templates provide the file skeleton, prompts define the generation context, and skills supply the code snippets.
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+# Allure
+/allure-results/

@@ -31,11 +31,21 @@ export class RegistrationPage {
 
     // Navigation is handled in a separate method
     // Form inputs – use placeholder text as primary selector, with fallbacks
-    this.firstNameInput = page.getByPlaceholder('first name').or(page.locator('input[name="first_name"]'));
-    this.lastNameInput = page.getByPlaceholder('last name').or(page.locator('input[name="last_name"]'));
-    this.usernameInput = page.getByPlaceholder('username').or(page.locator('input[name="username"]'));
-    this.emailInput = page.getByPlaceholder('email@email.com').or(page.locator('input[name="email"]'));
-    this.passwordInput = page.locator('input[name="password"]').or(page.locator('input[type="password"]'));
+    this.firstNameInput = page
+      .getByPlaceholder('first name')
+      .or(page.locator('input[name="first_name"]'));
+    this.lastNameInput = page
+      .getByPlaceholder('last name')
+      .or(page.locator('input[name="last_name"]'));
+    this.usernameInput = page
+      .getByPlaceholder('username')
+      .or(page.locator('input[name="username"]'));
+    this.emailInput = page
+      .getByPlaceholder('email@email.com')
+      .or(page.locator('input[name="email"]'));
+    this.passwordInput = page
+      .locator('input[name="password"]')
+      .or(page.locator('input[type="password"]'));
     this.phoneInput = page.getByPlaceholder('571-000-0000').or(page.locator('input[name="phone"]'));
 
     // Gender radios – use input[value] directly
@@ -50,21 +60,30 @@ export class RegistrationPage {
     this.jobTitleSelect = page.locator('select[name="job_title"]');
 
     // Programming language checkboxes
-    this.programmingLanguageJavaCheckbox = page.getByRole('checkbox', { name: 'Java' }).or(page.locator('input[value="java"]'));
-    this.programmingLanguageJavaScriptCheckbox = page.getByRole('checkbox', { name: 'JavaScript' }).or(page.locator('input[value="javascript"]'));
+    this.programmingLanguageJavaCheckbox = page
+      .getByRole('checkbox', { name: 'Java' })
+      .or(page.locator('input[value="java"]'));
+    this.programmingLanguageJavaScriptCheckbox = page
+      .getByRole('checkbox', { name: 'JavaScript' })
+      .or(page.locator('input[value="javascript"]'));
 
     // Submit button
     this.signUpButton = page.getByRole('button', { name: 'Sign up' });
 
     // Confirmation alert on success page
-    this.confirmationAlert = page.getByRole('alert').or(page.locator('.alert')).or(page.locator('[role="alert"]'));
+    this.confirmationAlert = page
+      .getByRole('alert')
+      .or(page.locator('.alert'))
+      .or(page.locator('[role="alert"]'));
   }
 
   /**
    * Navigate to the registration form page.
    */
   async goto(): Promise<void> {
-    await this.page.goto('https://the-internet-5chk.onrender.com/registration_form', { waitUntil: 'networkidle' });
+    await this.page.goto('https://the-internet-5chk.onrender.com/registration_form', {
+      waitUntil: 'networkidle',
+    });
   }
 
   /** Fill First Name */
@@ -160,7 +179,7 @@ export class RegistrationPage {
     await this.fillPassword(data.password);
     await this.fillPhone(data.phone);
     await this.selectGender(data.gender);
-    
+
     // Optional fields - only fill if present
     if (data.dob) {
       await this.dobInput.fill(data.dob).catch(() => {});
