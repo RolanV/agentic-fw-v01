@@ -42,8 +42,8 @@ export class RegistrationPage {
     this.genderMaleRadio = page.locator('input[value="male"]');
     this.genderFemaleRadio = page.locator('input[value="female"]');
 
-    // Date of birth – skip for now as it may not be on the basic form
-    this.dobInput = page.locator('input[name="dob"]').or(page.locator('[data-test-id="dob"]'));
+    // Date of birth – use placeholder selector
+    this.dobInput = page.getByPlaceholder('MM/DD/YYYY').or(page.locator('input[name="dob"]'));
 
     // Department and job title – select elements
     this.departmentSelect = page.locator('select[name="department"]');
