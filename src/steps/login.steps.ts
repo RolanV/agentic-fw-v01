@@ -12,7 +12,7 @@ let loginPage: LoginPage;
  */
 Before(async function () {
   browser = await chromium.launch();
-  context = await browser.createContext();
+  context = await browser.newContext();
   page = await context.newPage();
   loginPage = new LoginPage(page);
 });
@@ -76,6 +76,14 @@ When('the user leaves the password field empty', async function () {
 });
 
 /**
+ * When: User leaves both email and password fields empty
+ */
+When('the user leaves both email and password fields empty', async function () {
+  await loginPage.clearEmail();
+  await loginPage.clearPassword();
+});
+
+/**
  * When: User clicks on "Open an account" link
  */
 When('the user clicks on {string} link', async function (linkText: string) {
@@ -102,91 +110,57 @@ When('the user enters password {string} in the password field', async function (
  * Then: User should be logged in successfully
  */
 Then('the user should be logged in successfully', async function () {
-  // Wait for potential redirect or success state
-  await page.waitForLoadState('networkidle').catch(() => {
-    // Ignore if network is not idle
-  });
-
-  // Check if user is no longer on login page or a success indicator is shown
-  const isStillOnLogin = page.url().includes('login');
-  if (isStillOnLogin) {
-    const errorVisible = await loginPage.isErrorMessageVisible();
-    if (errorVisible) {
-      throw new Error('Login failed - error message visible');
-    }
-  }
+  await expect(page).toHaveURL(/dashboard/);
 });
 
 /**
  * Then: User should be redirected to the dashboard
  */
 Then('the user should be redirected to the dashboard', async function () {
-  await page.waitForLoadState('networkidle').catch(() => {
-    // Ignore if network is not idle
-  });
-
-  const currentUrl = await loginPage.getCurrentUrl();
-  const isOnDashboard =
-    currentUrl.includes('dashboard') ||
-    currentUrl.includes('home') ||
-    !currentUrl.includes('login');
-
-  expect(isOnDashboard).toBeTruthy();
+  await expect(page).toHaveURL(/dashboard/);
 });
 
 /**
  * Then: Login should be successful
  */
 Then('the login should be successful', async function () {
-  await page.waitForLoadState('networkidle').catch(() => {
-    // Ignore if network is not idle
-  });
-
-  const hasError = await loginPage.isErrorMessageVisible();
-  expect(hasError).toBeFalsy();
+  await expect(page).toHaveURL(/dashboard/);
+  await expect(loginPage.loginErrorNote).toHaveCount(0);
 });
 
 /**
  * Then: An email validation error should be displayed
+ * The app shows a single validation note when a required field is empty.
  */
 Then('an email validation error should be displayed', async function () {
-  await page.waitForTimeout(500); // Wait for validation message
-  const emailErrorVisible = await loginPage.isEmailErrorVisible();
-  expect(emailErrorVisible).toBeTruthy();
+  await expect(loginPage.loginErrorNote).toBeVisible();
+  await expect(loginPage.loginErrorNote).toContainText('Enter your email and password');
 });
 
 /**
  * Then: A password validation error should be displayed
+ * The app shows a single validation note when a required field is empty.
  */
 Then('a password validation error should be displayed', async function () {
-  await page.waitForTimeout(500); // Wait for validation message
-  const passwordErrorVisible = await loginPage.isPasswordErrorVisible();
-  expect(passwordErrorVisible).toBeTruthy();
+  await expect(loginPage.loginErrorNote).toBeVisible();
+  await expect(loginPage.loginErrorNote).toContainText('Enter your email and password');
 });
 
 /**
  * Then: An invalid credentials error should be displayed
  */
 Then('an invalid credentials error should be displayed', async function () {
-  await page.waitForTimeout(500); // Wait for error message
-  const errorVisible = await loginPage.isErrorMessageVisible();
-  expect(errorVisible).toBeTruthy();
-
-  const errorText = await loginPage.getErrorMessageText();
-  const isInvalidCredentials =
-    errorText.toLowerCase().includes('invalid') ||
-    errorText.toLowerCase().includes('incorrect') ||
-    errorText.toLowerCase().includes('failed');
-  expect(isInvalidCredentials).toBeTruthy();
+  await expect(loginPage.loginErrorNote).toBeVisible();
+  await expect(loginPage.loginErrorNote).toContainText('Invalid email or password');
 });
 
 /**
  * Then: An email format error should be displayed
+ * The app shows the same generic validation note for an invalidly formatted email.
  */
 Then('an email format error should be displayed', async function () {
-  await page.waitForTimeout(500); // Wait for validation message
-  const emailErrorVisible = await loginPage.isEmailErrorVisible();
-  expect(emailErrorVisible).toBeTruthy();
+  await expect(loginPage.loginErrorNote).toBeVisible();
+  await expect(loginPage.loginErrorNote).toContainText('Enter your email and password');
 });
 
 /**
@@ -279,22 +253,19 @@ Then(
  * Then: Validation errors should be displayed for both fields
  */
 Then('validation errors should be displayed for both fields', async function () {
-  await page.waitForTimeout(500); // Wait for validation messages
-
-  const emailErrorVisible = await loginPage.isEmailErrorVisible();
-  const passwordErrorVisible = await loginPage.isPasswordErrorVisible();
-
-  expect(emailErrorVisible).toBeTruthy();
-  expect(passwordErrorVisible).toBeTruthy();
+  // The live app shows a single validation note when both fields are empty
+  await expect(loginPage.loginErrorNote).toBeVisible();
+  await expect(loginPage.loginErrorNote).toContainText('Enter your email and password');
 });
 
 /**
- * Then: Page should load within acceptable time
+ * Then: Login page should load within acceptable time
  */
-Then('the page should load within {int} seconds', async function (_seconds: number) {
-  // This is tracked by the initial page load
-  const currentUrl = await loginPage.getCurrentUrl();
-  expect(currentUrl).toContain('login');
+Then('the login page should load within {int} seconds', async function (seconds: number) {
+  const start = Date.now();
+  await loginPage.goto();
+  const duration = (Date.now() - start) / 1000;
+  expect(duration).toBeLessThanOrEqual(seconds);
 });
 
 /**

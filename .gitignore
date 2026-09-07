@@ -53,3 +53,10 @@ coverage/
 
 # Allure
 /allure-results/
+
+# Local agent tooling (not part of the project)
+/.playwright-mcp/
+/.qwen/
+
+# Generated test reports (regenerated on each run)
+/reports/cucumber-report.html

@@ -88,5 +88,5 @@ Feature: ZincBank User Login
   @performance
   Scenario: Login page loads within acceptable time
     Given the user navigates to the ZincBank login page
-    Then the page should load within 3 seconds
+    Then the login page should load within 3 seconds
     And all login form elements should be visible

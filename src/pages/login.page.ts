@@ -16,8 +16,7 @@ export class LoginPage {
   readonly signInButton: Locator;
   readonly openAccountLink: Locator;
   readonly errorMessage: Locator;
-  readonly emailErrorMessage: Locator;
-  readonly passwordErrorMessage: Locator;
+  readonly loginErrorNote: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -47,26 +46,9 @@ export class LoginPage {
       .getByRole('link', { name: 'Open an account' })
       .or(page.getByText('Open an account'));
 
-    // Error messages
-    this.errorMessage = page
-      .locator('[role="alert"]')
-      .or(page.locator('.error').or(page.locator('[class*="error"]')));
-
-    this.emailErrorMessage = page
-      .locator('[class*="error"][class*="email"]')
-      .or(
-        page
-          .getByText('Email is required', { exact: false })
-          .or(page.getByText('Please enter a valid email', { exact: false })),
-      );
-
-    this.passwordErrorMessage = page
-      .locator('[class*="error"][class*="password"]')
-      .or(
-        page
-          .getByText('Password is required', { exact: false })
-          .or(page.getByText('Invalid password', { exact: false })),
-      );
+    // Error messages - the app renders a single inline note (testid login-error)
+    this.errorMessage = page.getByTestId('login-error');
+    this.loginErrorNote = page.getByTestId('login-error');
   }
 
   /**
@@ -191,42 +173,6 @@ export class LoginPage {
   async getErrorMessageText(): Promise<string> {
     try {
       return (await this.errorMessage.textContent()) || '';
-    } catch {
-      return '';
-    }
-  }
-
-  /**
-   * Check if email error is visible
-   */
-  async isEmailErrorVisible(): Promise<boolean> {
-    return await this.emailErrorMessage.isVisible().catch(() => false);
-  }
-
-  /**
-   * Check if password error is visible
-   */
-  async isPasswordErrorVisible(): Promise<boolean> {
-    return await this.passwordErrorMessage.isVisible().catch(() => false);
-  }
-
-  /**
-   * Get email error text
-   */
-  async getEmailErrorText(): Promise<string> {
-    try {
-      return (await this.emailErrorMessage.textContent()) || '';
-    } catch {
-      return '';
-    }
-  }
-
-  /**
-   * Get password error text
-   */
-  async getPasswordErrorText(): Promise<string> {
-    try {
-      return (await this.passwordErrorMessage.textContent()) || '';
     } catch {
       return '';
     }

@@ -7,6 +7,7 @@
     "lint": "eslint . --config eslint.config.js",
     "format": "prettier --write .",
     "test": "playwright test",
+    "test:bdd": "cucumber-js",
     "test:report": "playwright test --reporter=line,allure-playwright",
     "allure:serve": "allure serve ./allure-results",
     "prepare": "husky install"

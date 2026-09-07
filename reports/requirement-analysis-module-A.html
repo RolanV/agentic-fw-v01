@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZincBank — Module A (Getting Started) Requirement Analysis</title>
+    <style>
+      :root {
+        --ink: #1c2434;
+        --muted: #5b6472;
+        --line: #e3e7ee;
+        --brand: #0e6e5c;
+        --brand-soft: #e7f3f0;
+        --accent: #c97b2d;
+        --red: #b3261e;
+        --red-soft: #fdecea;
+        --amber: #9a6700;
+        --amber-soft: #fdf3d7;
+        --blue: #1d4ed8;
+        --blue-soft: #eaf0fe;
+        --bg: #f6f7f9;
+        --card: #ffffff;
+        --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.55;
+      }
+      .wrap {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 40px 24px 80px;
+      }
+      header.hero {
+        background: linear-gradient(135deg, #0e6e5c 0%, #0a3d34 100%);
+        color: #fff;
+        border-radius: 14px;
+        padding: 32px 36px;
+        margin-bottom: 28px;
+      }
+      header.hero h1 {
+        margin: 0 0 6px;
+        font-size: 26px;
+        letter-spacing: 0.2px;
+      }
+      header.hero p {
+        margin: 4px 0;
+        color: #d7ece7;
+        font-size: 14px;
+      }
+      header.hero .chip {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 2px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        margin-top: 10px;
+        margin-right: 6px;
+      }
+      h2.sec {
+        font-size: 18px;
+        margin: 36px 0 12px;
+        padding-bottom: 6px;
+        border-bottom: 2px solid var(--line);
+      }
+      h3 {
+        font-size: 15px;
+        margin: 18px 0 8px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 20px 24px;
+        margin-bottom: 20px;
+      }
+      .req-header {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .req-ref {
+        font-family: var(--mono);
+        font-weight: 700;
+        font-size: 15px;
+        color: var(--brand);
+        background: var(--brand-soft);
+        border-radius: 6px;
+        padding: 2px 8px;
+      }
+      .req-title {
+        font-size: 17px;
+        font-weight: 600;
+      }
+      .score-pill {
+        margin-left: auto;
+        font-size: 13px;
+        font-weight: 700;
+        border-radius: 999px;
+        padding: 4px 12px;
+      }
+      .score-bad {
+        background: var(--red-soft);
+        color: var(--red);
+      }
+      .score-mid {
+        background: var(--amber-soft);
+        color: var(--amber);
+      }
+      .score-good {
+        background: var(--brand-soft);
+        color: var(--brand);
+      }
+      blockquote.brief {
+        margin: 10px 0;
+        padding: 10px 14px;
+        background: #fafbfc;
+        border-left: 4px solid var(--accent);
+        border-radius: 0 8px 8px 0;
+        font-style: italic;
+        color: #33404f;
+      }
+      .tag {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 6px;
+        padding: 2px 8px;
+        margin: 2px 4px 2px 0;
+      }
+      .tag.label {
+        background: var(--amber-soft);
+        color: var(--amber);
+        font-family: var(--mono);
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 13.5px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+      }
+      th {
+        background: #f0f2f6;
+        font-weight: 600;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      .mono {
+        font-family: var(--mono);
+        font-size: 12.5px;
+      }
+      ul.tight {
+        margin: 6px 0;
+        padding-left: 20px;
+      }
+      ul.tight li {
+        margin-bottom: 4px;
+      }
+      .bad {
+        color: var(--red);
+        font-weight: 600;
+      }
+      .warn {
+        color: var(--amber);
+        font-weight: 600;
+      }
+      .proposal {
+        display: block;
+        margin-top: 4px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .proposal::before {
+        content: 'PROPOSED - ';
+        font-weight: 700;
+        color: var(--accent);
+      }
+      .tc {
+        border-left: 3px solid var(--brand);
+        padding: 6px 10px;
+        margin: 8px 0;
+        background: #f8faf9;
+        border-radius: 0 6px 6px 0;
+      }
+      .tc b {
+        color: var(--brand);
+        font-family: var(--mono);
+        font-size: 13px;
+      }
+      footer {
+        margin-top: 40px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .sum-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+      }
+      @media (max-width: 760px) {
+        .sum-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .stat {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 14px 16px;
+      }
+      .stat .num {
+        font-size: 30px;
+        font-weight: 700;
+      }
+      .stat .lbl {
+        font-size: 12px;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="hero">
+        <h1>ZincBank - Requirements Analysis</h1>
+        <p>
+          Module A &middot; Getting Started &middot; Requirement Decomposition &amp; Testability
+          Audit
+        </p>
+        <p>
+          Method: <b>Read &rarr; Diagnose &rarr; Refine &rarr; Specify &rarr; Test</b> &mdash;
+          turning vague business briefs into atomic, measurable, testable requirements
+        </p>
+        <span class="chip">4 requirements</span>
+        <span class="chip">A1-A4</span>
+        <span class="chip">Report generated 2026-09-06</span>
+      </header>
+
+      <div class="sum-grid">
+        <div class="stat">
+          <div class="num">4</div>
+          <div class="lbl">Requirements analysed</div>
+        </div>
+        <div class="stat">
+          <div class="num">21</div>
+          <div class="lbl">Atomic requirements (refined)</div>
+        </div>
+        <div class="stat">
+          <div class="num">21</div>
+          <div class="lbl">Acceptance criteria</div>
+        </div>
+        <div class="stat">
+          <div class="num">25</div>
+          <div class="lbl">Test cases specified</div>
+        </div>
+      </div>
+
+      <h2 class="sec">1 &middot; Executive summary</h2>
+      <div class="card">
+        <p>
+          All four Module&nbsp;A briefs are deliberately vague, as shipped. Each was scored for
+          <b>testability readiness</b> (how directly it can be turned into automated checks) on a
+          10-point scale, and labelled with the requirement-quality defect it most violates.
+          Refinement proposes concrete, measurable defaults wherever the business stayed silent
+          &mdash; every such default is flagged <b>PROPOSED</b> for the business to confirm before
+          it becomes a commitment.
+        </p>
+        <table>
+          <tr>
+            <th>Ref</th>
+            <th>Title</th>
+            <th>Readiness</th>
+            <th>Most-violated quality attribute</th>
+            <th>Primary defect label</th>
+            <th>Atomic reqs</th>
+            <th>ACs</th>
+            <th>Tests</th>
+          </tr>
+          <tr>
+            <td class="mono">A1</td>
+            <td>Opening an account with ZincBank</td>
+            <td><span class="score-pill score-bad">3 / 10</span></td>
+            <td>Verifiable &middot; Complete</td>
+            <td><span class="tag label">req:silent</span></td>
+            <td>6</td>
+            <td>5</td>
+            <td>7</td>
+          </tr>
+          <tr>
+            <td class="mono">A2</td>
+            <td>Signing in</td>
+            <td><span class="score-pill score-mid">4 / 10</span></td>
+            <td>Verifiable &middot; Unambiguous</td>
+            <td><span class="tag label">req:unmeasurable</span></td>
+            <td>4</td>
+            <td>6</td>
+            <td>6</td>
+          </tr>
+          <tr>
+            <td class="mono">A3</td>
+            <td>Someone signs up twice with the same email</td>
+            <td><span class="score-pill score-mid">4 / 10</span></td>
+            <td>Unambiguous &middot; Complete</td>
+            <td><span class="tag label">req:ambiguous</span></td>
+            <td>4</td>
+            <td>5</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td class="mono">A4</td>
+            <td>Forgetting your password</td>
+            <td><span class="score-pill score-bad">2 / 10</span></td>
+            <td>Complete &middot; Verifiable</td>
+            <td><span class="tag label">req:silent</span></td>
+            <td>7</td>
+            <td>5</td>
+            <td>7</td>
+          </tr>
+        </table>
+        <p style="margin-bottom: 0">
+          <b>Headline risk:</b> A4 is the least testable &mdash; the recovery <i>method</i> itself
+          is unspecified ("a way back in"), so no automated check can be written until the mechanism
+          (email link, token lifetime, session invalidation) is decided. A1 hides the most
+          acceptance detail (field validation, initial balance, post-registration state) inside the
+          phrase "ready to use".
+        </p>
+      </div>
+
+      <!-- ============================ A1 ============================ -->
+      <h2 class="sec">2 &middot; A1 &mdash; Opening an account with ZincBank</h2>
+
+      <div class="card">
+        <div class="req-header">
+          <span class="req-ref">A1</span>
+          <span class="req-title">Opening an account with ZincBank</span>
+          <span class="score-pill score-bad">Readiness 3 / 10</span>
+        </div>
+
+        <h3>Read &mdash; the vague brief, as written</h3>
+        <blockquote class="brief">
+          "Anyone should be able to sign up for ZincBank from our website and start banking straight
+          away. We ask for their email, a password and their name. Once they are finished they
+          should have an account ready to use, with somewhere to keep their money."
+        </blockquote>
+
+        <h3>Diagnose &mdash; scoring &amp; violated quality attributes</h3>
+        <table>
+          <tr>
+            <th>Finding</th>
+            <th>Severity</th>
+            <th>Quality attribute</th>
+            <th>Defect label</th>
+          </tr>
+          <tr>
+            <td>
+              "Anyone" &mdash; no age, residency or eligibility boundary; "anyone" cannot literally
+              mean every human alive.
+            </td>
+            <td><span class="warn">Medium</span></td>
+            <td>Unambiguous</td>
+            <td><span class="tag label">req:ambiguous</span></td>
+          </tr>
+          <tr>
+            <td>
+              No password policy (length, complexity, allowed characters) &mdash; nothing to assert
+              pass/fail against.
+            </td>
+            <td><span class="bad">High</span></td>
+            <td>Verifiable</td>
+            <td><span class="tag label">req:unmeasurable</span></td>
+          </tr>
+          <tr>
+            <td>
+              "start banking straight away" &mdash; the success state and the meaning of "straight
+              away" are undefined.
+            </td>
+            <td><span class="warn">Medium</span></td>
+            <td>Verifiable</td>
+            <td><span class="tag label">req:unmeasurable</span></td>
+          </tr>
+          <tr>
+            <td>
+              "somewhere to keep their money" &mdash; account type, currency, and initial balance
+              are all unspecified.
+            </td>
+            <td><span class="bad">High</span></td>
+            <td>Complete</td>
+            <td><span class="tag label">req:silent</span></td>
+          </tr>
+          <tr>
+            <td>
+              Field-level validation rules (email format, required fields, uniqueness) not stated.
+            </td>
+            <td><span class="bad">High</span></td>
+            <td>Complete</td>
+            <td><span class="tag label">req:silent</span></td>
+          </tr>
+          <tr>
+            <td>
+              No stated behaviour after success &mdash; auto sign-in? redirect target?
+              account-number assignment?
+            </td>
+            <td><span class="warn">Medium</span></td>
+            <td>Complete</td>
+            <td><span class="tag label">req:silent</span></td>
+          </tr>
+        </table>
+
+        <h3>Refine &mdash; atomic, measurable requirements</h3>
+        <table>
+          <tr>
+            <th style="width: 70px">Ref</th>
+            <th>Atomic requirement</th>
+          </tr>
+          <tr>
+            <td class="mono">A1.1</td>
+            <td>
+              The registration form SHALL collect exactly three fields: <b>full name</b>,
+              <b>email address</b>, and <b>password</b>.
+            </td>
+          </tr>
+          <tr>
+            <td class="mono">A1.2</td>
+            <td>
+              The email SHALL match <span class="mono">local@domain.tld</span> (valid top-level
+              domain); malformed emails SHALL be rejected with an inline error.<span
+                class="proposal"
+                >regex default &mdash; business to confirm</span
+              >
+            </td>
+          </tr>
+          <tr>
+            <td class="mono">A1.3</td>
+            <td>
+              The password SHALL be at least 8 characters and contain at least one uppercase letter,
+              one lowercase letter, and one digit.<span class="proposal"
+                >policy default &mdash; business to confirm</span
+              >
+            </td>
+          </tr>
+          <tr>
+            <td class="mono">A1.4</td>
+            <td>
+              On valid submission the system SHALL create the customer record <b>and</b> a single
+              default <b>Current Account</b> with an initial balance of <b>&pound;0.00</b>.<span
+                class="proposal"
+                >account type/currency/balance &mdash; business to confirm</span
+              >
+            </td>
+          </tr>
+          <tr>
+            <td class="mono">A1.5</td>
+            <td>
+              On valid submission the system SHALL automatically sign the customer in and land them
+              on the <b>dashboard</b>.
+            </td>
+          </tr>
+          <tr>
+            <td class="mono">A1.6</td>
+            <td>
+              Every account SHALL be assigned a unique, zero-padded
+              <b>8-digit account number</b>.<span class="proposal"
+                >format default &mdash; business to confirm</span
+              >
+            </td>
+          </tr>
+        </table>
+
+        <h3>Specify &mdash; acceptance criteria (testable)</h3>
+        <ul class="tight">
+          <li>
+            <b class="mono">AC-A1.1</b> Given an unregistered visitor, when they open the sign-up
+            page, then a form with fields <i>Name</i>, <i>Email</i>, <i>Password</i> is displayed.
+          </li>
+          <li>
+            <b class="mono">AC-A1.2</b> When a malformed email (e.g.
+            <span class="mono">notanemail</span>) is submitted, the submission is blocked and an
+            inline error containing "valid email" is shown.
+          </li>
+          <li>
+            <b class="mono">AC-A1.3</b> When the password is 7 characters or fails complexity,
+            submission is blocked; at exactly 8 characters with the required classes it is accepted.
+          </li>
+          <li>
+            <b class="mono">AC-A1.4</b> After successful registration the customer is signed in
+            (session established) and the dashboard URL is loaded.
+          </li>
+          <li>
+            <b class="mono">AC-A1.5</b> After successful registration a Current Account with balance
+            &pound;0.00 and a unique 8-digit number is listed under Accounts.
+          </li>
+        </ul>
+
+        <h3>Test &mdash; expand each criterion into test cases</h3>
+        <div class="tc">
+          <b>TC-A1.1</b> Successful registration creates account &amp; signs in &mdash; valid data
+          &rarr; dashboard loads with no extra login step (e2e)
+        </div>
+        <div class="tc">
+          <b>TC-A1.2</b> Malformed email rejected &mdash;
+          <span class="mono">"notanemail"</span> &rarr; blocked, inline "valid email" error
+          (negative)
+        </div>
+        <div class="tc">
+          <b>TC-A1.3</b> Weak password rejected &mdash; <span class="mono">"password"</span> &rarr;
+          blocked, complexity error (negative)
+        </div>
+        <div class="tc">
+          <b>TC-A1.4</b> Boundary: 7-char password rejected vs 8-char accepted &mdash;
+          <span class="mono">"Abcdef1"</span> vs <span class="mono">"Abcdef12"</span> (boundary)
+        </div>
+        <div class="tc">
+          <b>TC-A1.5</b> Empty required fields &mdash; submit blank &rarr; three inline "required"
+          errors, no account created (negative)
+        </div>
+        <div class="tc">
+          <b>TC-A1.6</b> New account state &mdash; after registration, Accounts shows balance
+          exactly &pound;0.00 (functional)
+        </div>
+        <div class="tc">
+          <b>TC-A1.7</b> Account-number uniqueness &mdash; register two customers &rarr; numbers
+          differ and are 8 digits (regression/functional)
+        </div>
+      </div>
+
+      <!-- ============================ A2 ============================ -->
+      <h2 class="sec">3 &middot; A2 &mdash; Signing in</h2>
+
+      <div class="card">
+        <div class="req-header">
+          <span class="req-ref">A2</span>
+          <span class="req-title">Signing in</span>
+          <span class="score-pill score-mid">Readiness 4 / 10</span>
+        </div>
+
+        <h3>Read &mdash; the vague brief, as written</h3>
+        <blockquote class="brief">
+          "Customers sign in with the email address and the password they chose when they joined. If
+          they get either one wrong we should tell them. Signing in needs to be quick and shouldn't
+          get in the way of what they came to do."
+        </blockquote>
+
+        <h3>Diagnose &mdash; scoring &amp; violated quality attributes</h3>
+        <table>
+          <tr>
+            <th>Finding</th>
+            <th>Severity</th>
+            <th>Quality attribute</th>
+            <th>Defect label</th>
+          </tr>
+          <tr>
+            <td>
+              "tell them" &mdash; does the error reveal WHICH field is wrong, or is it generic?
+              Revealing it enables account enumeration (security conflict).
+            </td>
+            <td><span class="bad">High</span></td>
+            <td>Unambiguous &middot; Consistent</td>
+            <td><span class="tag label">req:ambiguous</span></td>
+          </tr>
+          <tr>
+            <td>"quick" &mdash; no performance budget, so no assertion is possible.</td>
+            <td><span class="warn">Medium</span></td>
+            <td>Verifiable</td>
+            <td><span class="tag label">req:unmeasurable</span></td>
+          </tr>
+          <tr>
+            <td>
+              "shouldn't get in the way" &mdash; success behaviour (redirect target, session length)
+              not defined.
+            </td>
+            <td><span class="warn">Medium</span></td>
+            <td>Complete</td>
+            <td><span class="tag label">req:silent</span></td>
+          </tr>
+          <tr>
+            <td>
+              No failure-handling policy: repeated wrong attempts, lockout, or rate limiting all
+              unstated.
+            </td>
+            <td><span class="warn">Medium</span></td>
+            <td>Complete</td>
+            <td><span class="tag label">req:silent</span></td>
+          </tr>
+          <tr>
+            <td>
+              Email handling unspecified &mdash; case sensitivity / leading-trailing whitespace.
+            </td>
+            <td><span class="warn">Medium</span></td>
+            <td>Unambiguous</td>
+            <td><span class="tag label">req:ambiguous</span></td>
+          </tr>
+        </table>
+
+        <h3>Refine &mdash; atomic, measurable requirements</h3>
+        <table>
+          <tr>
+            <th style="width: 70px">Ref</th>
+            <th>Atomic requirement</th>
+          </tr>
+          <tr>
+            <td class="mono">A2.1</td>
+            <td>Sign-in SHALL accept exactly two credentials: <b>email</b> and <b>password</b>.</td>
+          </tr>
+          <tr>
+            <td class="mono">A2.2</td>
+            <td>
+              On any authentication failure the system SHALL display the identical, generic message
+              <span class="mono">"Incorrect email or password"</span> &mdash; never revealing which
+              credential was wrong.<span class="proposal"
+                >anti-enumeration stance &mdash; business to confirm</span
+              >
+            </td>
+          </tr>
+          <tr>
+            <td class="mono">A2.3</td>
+            <td>
+              On success the system SHALL establish a session and load the dashboard within
+              <b>2 seconds</b>.<span class="proposal"
+                >performance budget &mdash; business to confirm</span
+              >
+            </td>
+          </tr>
+          <tr>
+            <td class="mono">A2.4</td>
+            <td>
+              Email matching SHALL be case-insensitive and ignore leading/trailing whitespace.
+            </td>
+          </tr>
+        </table>
+
+        <h3>Specify &mdash; acceptance criteria (testable)</h3>
+        <ul class="tight">
+          <li>
+            <b class="mono">AC-A2.1</b> Given a registered customer, when they sign in with the
+            correct email and password, then they are redirected to the dashboard.
+          </li>
+          <li>
+            <b class="mono">AC-A2.2</b> When the password is wrong, then the error
+            <span class="mono">"Incorrect email or password"</span> is shown and the user stays on
+            the sign-in page.
+          </li>
+          <li>
+            <b class="mono">AC-A2.3</b> When the email is unknown, then the SAME error text is shown
+            (identical string to AC-A2.2).
+          </li>
+          <li>
+            <b class="mono">AC-A2.4</b> When the email differs only in case (e.g.
+            <span class="mono">Test@Example.com</span> vs
+            <span class="mono">test@example.com</span>), sign-in succeeds.
+          </li>
+          <li>
+            <b class="mono">AC-A2.5</b> When either field is empty, inline "required" validation is
+            shown and no request to authenticate is made.
+          </li>
+          <li>
+            <b class="mono">AC-A2.6</b> Dashboard navigation after successful sign-in completes in
+            under 2 seconds.
+          </li>
+        </ul>
+
+        <h3>Test &mdash; expand each criterion into test cases</h3>
+        <div class="tc">
+          <b>TC-A2.1</b> Successful sign-in &mdash; valid credentials &rarr; dashboard loads (e2e)
+        </div>
+        <div class="tc">
+          <b>TC-A2.2</b> Wrong password &mdash; error shown, stays on sign-in page (negative)
+        </div>
+        <div class="tc">
+          <b>TC-A2.3</b> Unknown email &mdash; exact same generic error text, no enumeration
+          (security)
+        </div>
+        <div class="tc">
+          <b>TC-A2.4</b> Email case-insensitivity &mdash;
+          <span class="mono">Test@Example.com</span> succeeds (functional)
+        </div>
+        <div class="tc">
+          <b>TC-A2.5</b> Empty fields &mdash; inline required errors, no auth call (negative)
+        </div>
+        <div class="tc">
+          <b>TC-A2.6</b> Performance &mdash; dashboard load &lt; 2s measured from submit
+          (performance)
+        </div>
+      </div>
+
+      <!-- ============================ A3 ============================ -->
+      <h2 class="sec">4 &middot; A3 &mdash; Someone signs up twice with the same email</h2>
+
+      <div class="card">
+        <div class="req-header">
+          <span class="req-ref">A3</span>
+          <span class="req-title">Someone signs up twice with the same email</span>
+          <span class="score-pill score-mid">Readiness 4 / 10</span>
+        </div>
+
+        <h3>Read &mdash; the vague brief, as written</h3>
+        <blockquote class="brief">
+          "If a person tries to join using an email address that already belongs to somebody, we
+          can't let them. We should explain the problem so they know to sign in instead."
+        </blockquote>
+
+        <h3>Diagnose &mdash; scoring &amp; violated quality attributes</h3>
+        <table>
+          <tr>
+            <th>Finding</th>
+            <th>Severity</th>
+            <th>Quality attribute</th>
+            <th>Defect label</th>
+          </tr>
+          <tr>
+            <td>
+              "explain the problem" &mdash; the exact message and channel (inline vs banner) are not
+              defined.
+            </td>
+            <td><span class="warn">Medium</span></td>
+            <td>Unambiguous</td>
+            <td><span class="tag label">req:ambiguous</span></td>
+          </tr>
+          <tr>
+            <td>
+              Duplicate detection semantics unspecified &mdash; case-insensitive?
+              whitespace-trimmed?
+            </td>
+            <td><span class="warn">Medium</span></td>
+            <td>Unambiguous</td>
+            <td><span class="tag label">req:ambiguous</span></td>
+          </tr>
+          <tr>
+            <td>
+              No statement of side effects &mdash; must no account be created? is any partial state
+              left behind?
+            </td>
+            <td><span class="bad">High</span></td>
+            <td>Complete</td>
+            <td><span class="tag label">req:silent</span></td>
+          </tr>
+          <tr>
+            <td>
+              Does the rejected form retain the user's typed data (so they only fix what is wrong)?
+            </td>
+            <td><span class="warn">Medium</span></td>
+            <td>Complete</td>
+            <td><span class="tag label">req:silent</span></td>
+          </tr>
+          <tr>
+            <td>
+              Confirming an email exists at sign-up is standard UX, but it is a mild
+              account-enumeration surface &mdash; no decision stated.
+            </td>
+            <td><span class="warn">Medium</span></td>
+            <td>Consistent</td>
+            <td><span class="tag label">req:contradictory</span></td>
+          </tr>
+        </table>
+
+        <h3>Refine &mdash; atomic, measurable requirements</h3>
+        <table>
+          <tr>
+            <th style="width: 70px">Ref</th>
+            <th>Atomic requirement</th>
+          </tr>
+          <tr>
+            <td class="mono">A3.1</td>
+            <td>
+              Duplicate-email detection SHALL be case-insensitive and ignore leading/trailing
+              whitespace.
+            </td>
+          </tr>
+          <tr>
+            <td class="mono">A3.2</td>
+            <td>
+              On duplicate email the system SHALL reject submission and display the message
+              <span class="mono"
+                >"An account with this email already exists. Please sign in instead."</span
+              ><span class="proposal">message default &mdash; business to confirm</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="mono">A3.3</td>
+            <td>
+              On duplicate email the system SHALL NOT create a new account and SHALL NOT change any
+              existing balance.
+            </td>
+          </tr>
+          <tr>
+            <td class="mono">A3.4</td>
+            <td>
+              On duplicate email the form SHALL retain the entered name and email; only the password
+              field is cleared.
+            </td>
+          </tr>
+        </table>
+
+        <h3>Specify &mdash; acceptance criteria (testable)</h3>
+        <ul class="tight">
+          <li>
+            <b class="mono">AC-A3.1</b> Given an already-registered email, when sign-up is attempted
+            with it again, then submission is rejected.
+          </li>
+          <li>
+            <b class="mono">AC-A3.2</b> The rejection message is exactly
+            <span class="mono"
+              >"An account with this email already exists. Please sign in instead."</span
+            >
+          </li>
+          <li>
+            <b class="mono">AC-A3.3</b> Duplicate detection fires when the email differs only by
+            case or has surrounding spaces (e.g. <span class="mono">Test@X.com</span> vs
+            <span class="mono">test@x.com</span>).
+          </li>
+          <li>
+            <b class="mono">AC-A3.4</b> After the rejected attempt, no new account appears and no
+            balance changes on the original account.
+          </li>
+          <li>
+            <b class="mono">AC-A3.5</b> After the rejected attempt, the name and email fields still
+            show the typed values; the password field is empty.
+          </li>
+        </ul>
+
+        <h3>Test &mdash; expand each criterion into test cases</h3>
+        <div class="tc">
+          <b>TC-A3.1</b> Duplicate email rejected &mdash; register, then re-register same email
+          &rarr; blocked (negative)
+        </div>
+        <div class="tc">
+          <b>TC-A3.2</b> Exact message asserted &mdash; error text matches string byte-for-byte
+          (functional)
+        </div>
+        <div class="tc">
+          <b>TC-A3.3</b> Case-insensitive duplicate &mdash;
+          <span class="mono">Test@X.com</span> after <span class="mono">test@x.com</span> &rarr;
+          blocked (boundary)
+        </div>
+        <div class="tc">
+          <b>TC-A3.4</b> No side effects &mdash; original account balance unchanged, no second
+          account (regression)
+        </div>
+        <div class="tc">
+          <b>TC-A3.5</b> Data retention &mdash; name/email retained, password cleared after
+          rejection (functional)
+        </div>
+      </div>
+
+      <!-- ============================ A4 ============================ -->
+      <h2 class="sec">5 &middot; A4 &mdash; Forgetting your password</h2>
+
+      <div class="card">
+        <div class="req-header">
+          <span class="req-ref">A4</span>
+          <span class="req-title">Forgetting your password</span>
+          <span class="score-pill score-bad">Readiness 2 / 10</span>
+        </div>
+
+        <h3>Read &mdash; the vague brief, as written</h3>
+        <blockquote class="brief">
+          "People forget passwords all the time and it shouldn't lock them out of their money. There
+          needs to be a way back in that is easy for the customer and safe for us."
+        </blockquote>
+
+        <h3>Diagnose &mdash; scoring &amp; violated quality attributes</h3>
+        <table>
+          <tr>
+            <th>Finding</th>
+            <th>Severity</th>
+            <th>Quality attribute</th>
+            <th>Defect label</th>
+          </tr>
+          <tr>
+            <td>
+              "a way back in" &mdash; the recovery MECHANISM is never named (email link? SMS?
+              security questions?). Nothing can be built or tested until it is.
+            </td>
+            <td><span class="bad">High</span></td>
+            <td>Unambiguous &middot; Complete</td>
+            <td><span class="tag label">req:solution-not-need</span></td>
+          </tr>
+          <tr>
+            <td>
+              "easy for the customer" &mdash; no usability measure (step count, time) is given.
+            </td>
+            <td><span class="warn">Medium</span></td>
+            <td>Verifiable</td>
+            <td><span class="tag label">req:unmeasurable</span></td>
+          </tr>
+          <tr>
+            <td>
+              "safe for us" &mdash; no security requirements stated (token single-use, expiry,
+              session invalidation, rate limiting).
+            </td>
+            <td><span class="bad">High</span></td>
+            <td>Complete</td>
+            <td><span class="tag label">req:silent</span></td>
+          </tr>
+          <tr>
+            <td>
+              No time bounds &mdash; token validity period, expiry behaviour, and reset-cooldown are
+              all undated.
+            </td>
+            <td><span class="bad">High</span></td>
+            <td>Complete</td>
+            <td><span class="tag label">req:undated</span></td>
+          </tr>
+          <tr>
+            <td>
+              Post-reset state undefined &mdash; are existing sessions revoked? does the new
+              password apply immediately?
+            </td>
+            <td><span class="warn">Medium</span></td>
+            <td>Complete</td>
+            <td><span class="tag label">req:silent</span></td>
+          </tr>
+          <tr>
+            <td>
+              No statement on whether the reset request page reveals account existence
+              (anti-enumeration).
+            </td>
+            <td><span class="warn">Medium</span></td>
+            <td>Consistent</td>
+            <td><span class="tag label">req:silent</span></td>
+          </tr>
+        </table>
+
+        <h3>Refine &mdash; atomic, measurable requirements</h3>
+        <table>
+          <tr>
+            <th style="width: 70px">Ref</th>
+            <th>Atomic requirement</th>
+          </tr>
+          <tr>
+            <td class="mono">A4.1</td>
+            <td>
+              Password recovery SHALL be performed via an email-reset link to the customer's
+              registered address.<span class="proposal"
+                >mechanism default &mdash; business to confirm</span
+              >
+            </td>
+          </tr>
+          <tr>
+            <td class="mono">A4.2</td>
+            <td>
+              The reset link SHALL contain a one-time token valid for <b>30 minutes</b> from
+              issue.<span class="proposal">expiry default &mdash; business to confirm</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="mono">A4.3</td>
+            <td>
+              A reset token SHALL be single-use: a second redemption SHALL fail with an
+              invalid/expired-token error.
+            </td>
+          </tr>
+          <tr>
+            <td class="mono">A4.4</td>
+            <td>
+              The reset page SHALL require a new password meeting the A1.3 policy (&ge; 8 chars,
+              upper + lower + digit).
+            </td>
+          </tr>
+          <tr>
+            <td class="mono">A4.5</td>
+            <td>
+              On successful reset the system SHALL revoke all existing sessions for the account and
+              accept the new password.
+            </td>
+          </tr>
+          <tr>
+            <td class="mono">A4.6</td>
+            <td>
+              The reset-request page SHALL show the same generic confirmation whether or not the
+              email exists (anti-enumeration).<span class="proposal"
+                >security default &mdash; business to confirm</span
+              >
+            </td>
+          </tr>
+          <tr>
+            <td class="mono">A4.7</td>
+            <td>
+              Reset requests SHALL be rate-limited to <b>5 per email per 24 hours</b>.<span
+                class="proposal"
+                >limit default &mdash; business to confirm</span
+              >
+            </td>
+          </tr>
+        </table>
+
+        <h3>Specify &mdash; acceptance criteria (testable)</h3>
+        <ul class="tight">
+          <li>
+            <b class="mono">AC-A4.1</b> When a registered customer requests a reset, they receive an
+            email containing a single reset link.
+          </li>
+          <li>
+            <b class="mono">AC-A4.2</b> A reset link opened twice fails on the second use with an
+            "invalid or expired link" message.
+          </li>
+          <li>
+            <b class="mono">AC-A4.3</b> A reset link used after 30 minutes fails with an "invalid or
+            expired link" message.
+          </li>
+          <li>
+            <b class="mono">AC-A4.4</b> The reset page rejects a new password that violates A1.3
+            policy and accepts one that complies.
+          </li>
+          <li>
+            <b class="mono">AC-A4.5</b> After a successful reset the old password no longer works,
+            the new password works, and existing sessions are invalidated.
+          </li>
+        </ul>
+
+        <h3>Test &mdash; expand each criterion into test cases</h3>
+        <div class="tc">
+          <b>TC-A4.1</b> Reset email sent &mdash; valid email &rarr; confirmation shown, reset link
+          delivered (functional)
+        </div>
+        <div class="tc">
+          <b>TC-A4.2</b> Anti-enumeration &mdash; unknown email receives the SAME confirmation text
+          as a known one (security)
+        </div>
+        <div class="tc">
+          <b>TC-A4.3</b> Single-use token &mdash; link works once, second redemption fails
+          (security)
+        </div>
+        <div class="tc">
+          <b>TC-A4.4</b> Token expiry &mdash; link after 30 min fails (boundary/security)
+        </div>
+        <div class="tc"><b>TC-A4.5</b> New-password policy enforced on reset page (negative)</div>
+        <div class="tc">
+          <b>TC-A4.6</b> Post-reset state &mdash; old password rejected, new accepted, sessions
+          revoked (security)
+        </div>
+        <div class="tc">
+          <b>TC-A4.7</b> Rate limit &mdash; 6th reset request within 24h is blocked (security)
+        </div>
+      </div>
+
+      <footer>
+        <p>
+          Prepared by CYDEO AI Lab &middot; ZincBank Module A requirement analysis &middot;
+          2026-09-06
+        </p>
+        <p>
+          Method: IEEE-29148 quality attributes + ZincTM defect labels (req:unmeasurable /
+          req:ambiguous / req:contradictory / req:silent / req:solution-not-need / req:undated)
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
