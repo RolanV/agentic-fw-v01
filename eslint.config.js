@@ -20,6 +20,6 @@ module.exports = [
       'no-console': 'warn',
       'no-duplicate-imports': 'error',
     },
-    ignores: ['.eslintrc.js', 'eslint.config.js', 'cucumber.js'],
+    ignores: ['.eslintrc.js', 'eslint.config.js', 'cucumber.js', 'cucumber.duplicate-email.js'],
   },
 ];

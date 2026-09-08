@@ -60,3 +60,6 @@ coverage/
 
 # Generated test reports (regenerated on each run)
 /reports/cucumber-report.html
+
+# Debug scratch (heal/fix phase diagnostic)
+debug-report.md
