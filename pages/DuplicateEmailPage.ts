@@ -1,5 +1,6 @@
-import { Page, Locator } from '@playwright/test';
-import { OpenAccountPage } from './open-account.page';
+import { Locator, Page } from '@playwright/test';
+import { BasePage } from './BasePage';
+import { OpenAccountPage } from './OpenAccountPage';
 
 /**
  * DuplicateEmailPage - Page Object Model for the duplicate-email A3 flow.
@@ -10,8 +11,7 @@ import { OpenAccountPage } from './open-account.page';
  *
  * This class contains no assertions.
  */
-export class DuplicateEmailPage {
-  readonly page: Page;
+export class DuplicateEmailPage extends BasePage {
   readonly applyPage: OpenAccountPage;
 
   /**
@@ -22,7 +22,7 @@ export class DuplicateEmailPage {
   readonly reviewSummary: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
     this.applyPage = new OpenAccountPage(page);
     this.duplicateEmailMessage = page.getByTestId('apply-error');
     this.reviewSummary = page.getByTestId('apply-review-summary');

@@ -29,7 +29,8 @@ coverage/
 # MacOS files
 .DS_Store
 # VS Code
-.vscode/
+.vscode/*
+!.vscode/settings.json
 # IDEA
 .idea/
 # Misc
@@ -60,6 +61,8 @@ coverage/
 
 # Generated test reports (regenerated on each run)
 /reports/cucumber-report.html
+/reports/*.png
+/reports/*.zip
 
 # Debug scratch (heal/fix phase diagnostic)
 debug-report.md
