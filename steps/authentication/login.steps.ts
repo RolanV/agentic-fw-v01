@@ -1,29 +1,6 @@
-import { Given, When, Then, Before, After } from '@cucumber/cucumber';
-import { Page, expect, chromium, Browser, BrowserContext } from '@playwright/test';
-import { LoginPage } from '../pages/login.page';
-
-let browser: Browser;
-let context: BrowserContext;
-let page: Page;
-let loginPage: LoginPage;
-
-/**
- * Hook: Initialize browser and page before each scenario
- */
-Before(async function () {
-  browser = await chromium.launch();
-  context = await browser.newContext();
-  page = await context.newPage();
-  loginPage = new LoginPage(page);
-});
-
-/**
- * Hook: Close browser and context after each scenario
- */
-After(async function () {
-  await context.close();
-  await browser.close();
-});
+import { Given, When, Then } from '@cucumber/cucumber';
+import { expect } from '@playwright/test';
+import { loginPage, page } from '../../globalPagesSetup';
 
 /**
  * Given: User is on the ZincBank login page

@@ -1,4 +1,5 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
+import { BasePage } from './BasePage';
 
 /**
  * OpenAccountPage - Page Object Model for the ZincBank "Open an account" flow (Req A1).
@@ -7,8 +8,7 @@ import { Page, Locator, expect } from '@playwright/test';
  * address -> security -> review & confirm) without assertions, plus the dashboard
  * post-registration state. Selectors use data-testid per the CYDEO contract.
  */
-export class OpenAccountPage {
-  readonly page: Page;
+export class OpenAccountPage extends BasePage {
   readonly baseUrl = 'https://zincbank.cydeo.io';
 
   // Step 2 - About you
@@ -45,7 +45,7 @@ export class OpenAccountPage {
   readonly dashboardTotalBalance: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
 
     // Step 2
     this.firstNameInput = page.getByTestId('apply-firstname-input');
@@ -134,7 +134,7 @@ export class OpenAccountPage {
 
   /** Post-approval - continue to dashboard. */
   async continueToDashboard(): Promise<void> {
-    await expect(this.decisionContinueButton).toBeVisible();
+    await this.decisionContinueButton.waitFor({ state: 'visible' });
     await this.decisionContinueButton.click();
   }
 

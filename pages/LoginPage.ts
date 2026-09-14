@@ -1,11 +1,11 @@
-import { Page, Locator } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
+import { BasePage } from './BasePage';
 
 /**
  * LoginPage - Page Object Model for ZincBank login page
  * Encapsulates all interactions with the login page without assertions
  */
-export class LoginPage {
-  readonly page: Page;
+export class LoginPage extends BasePage {
   readonly logo: Locator;
   readonly welcomeBackText: Locator;
   readonly heading: Locator;
@@ -19,7 +19,7 @@ export class LoginPage {
   readonly loginErrorNote: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
 
     // Logo and headers
     this.logo = page.locator('img[alt="ZincBank"]').or(page.locator('text=ZincBank').first());

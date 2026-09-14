@@ -38,6 +38,14 @@ A production‑ready, AI‑first UI automation platform built on **Playwright**,
    npm run allure:serve
    ```
 
+5. **View a failure trace**
+
+   When a scenario fails, a Playwright trace is saved to `reports/trace-<timestamp>.zip`. Open it with:
+
+   ```bash
+   npx playwright show-trace reports/trace-<timestamp>.zip
+   ```
+
 ## Using Cline Agents
 
 ### Example: Generate Feature, Scenario, Step Definitions and Page Objects for ZincBank Login

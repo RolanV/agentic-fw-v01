@@ -1,10 +1,9 @@
-@ui @smoke @regression
 Feature: Open an account - A1
   As a prospective customer of ZincBank
   I want to open a checking account through the online application
   So that I can start banking with a ready-to-use account
 
-  @positive @critical
+  @A1 @smoke @regression @positive
   Scenario: A visitor opens a checking account and is signed in
     Given the user is on the ZincBank open-account page
     When the user proceeds from the accounts step
